@@ -134,10 +134,12 @@ export const QuickInvoice = ({
 
       // Make background transparent
       document.body.classList.add('scanner-active');
+      await BarcodeScanner.hideBackground();
       
       // Add scanner overlay with back button, flash toggle, and focus line
       const scannerOverlay = document.createElement('div');
       scannerOverlay.id = 'scanner-overlay';
+      scannerOverlay.classList.add('scanner-ui');
       scannerOverlay.innerHTML = `
         <style>
           #scanner-overlay {
@@ -148,6 +150,7 @@ export const QuickInvoice = ({
             height: 100%;
             z-index: 9999;
             background: transparent;
+            pointer-events: none;
           }
           .scanner-controls {
             position: absolute;
@@ -240,6 +243,41 @@ export const QuickInvoice = ({
             border-radius: 8px;
             backdrop-filter: blur(10px);
           }
+          .scanner-controls {
+            position: fixed;
+            top: max(40px, env(safe-area-inset-top, 20px));
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 10001;
+            pointer-events: auto;
+          }
+          .scanner-btn {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 14px 26px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+            pointer-events: auto;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .scanner-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.95);
+          }
         </style>
         <div class="scanner-controls">
           <button id="scanner-back-btn" class="scanner-btn">← Kembali</button>
@@ -258,6 +296,7 @@ export const QuickInvoice = ({
         scanCancelled = true;
         await BarcodeScanner.stopScan();
         document.body.classList.remove('scanner-active');
+        await BarcodeScanner.showBackground();
         document.getElementById('scanner-overlay')?.remove();
         setIsScanning(false);
       });
@@ -268,7 +307,7 @@ export const QuickInvoice = ({
         const flashBtn = document.getElementById('scanner-flash-btn');
         if (flashBtn) {
           flashBtn.textContent = flashEnabled ? '💡 Flash ON' : '💡 Flash';
-          flashBtn.style.background = flashEnabled ? 'rgba(59, 130, 246, 0.8)' : 'rgba(0, 0, 0, 0.6)';
+          flashBtn.style.background = flashEnabled ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0, 0, 0, 0.85)';
         }
       });
       
@@ -277,6 +316,7 @@ export const QuickInvoice = ({
       
       // Remove transparency
       document.body.classList.remove('scanner-active');
+      await BarcodeScanner.showBackground();
       document.getElementById('scanner-overlay')?.remove();
       setIsScanning(false);
 
@@ -298,6 +338,7 @@ export const QuickInvoice = ({
     } catch (error) {
       console.error('Barcode scan error:', error);
       document.body.classList.remove('scanner-active');
+      await BarcodeScanner.showBackground();
       document.getElementById('scanner-overlay')?.remove();
       setIsScanning(false);
       toast.error('Terjadi kesalahan saat scanning');

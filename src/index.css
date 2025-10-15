@@ -259,4 +259,8 @@ body.scanner-active .scanner-ui {
   .safe-right {
     padding-right: env(safe-area-inset-right);
   }
+  
+  .top-safe {
+    top: env(safe-area-inset-top, 0);
+  }
 }

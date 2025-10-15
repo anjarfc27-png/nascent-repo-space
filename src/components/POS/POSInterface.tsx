@@ -406,10 +406,12 @@ Profit: ${formatPrice(receipt.profit)}
 
       // Make background transparent and show scanner UI
       document.body.classList.add('scanner-active');
+      await BarcodeScanner.hideBackground();
       
-      // Add scanner overlay with focus guide
+      // Add scanner overlay with back button, flash toggle, and focus line
       const scannerOverlay = document.createElement('div');
       scannerOverlay.id = 'scanner-overlay';
+      scannerOverlay.classList.add('scanner-ui');
       scannerOverlay.innerHTML = `
         <style>
           #scanner-overlay {
@@ -420,10 +422,11 @@ Profit: ${formatPrice(receipt.profit)}
             height: 100%;
             z-index: 9999;
             background: transparent;
+            pointer-events: none;
           }
           .scanner-controls {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: max(40px, env(safe-area-inset-top, 20px));
             left: 0;
             right: 0;
             display: flex;
@@ -431,17 +434,30 @@ Profit: ${formatPrice(receipt.profit)}
             align-items: center;
             padding: 0 20px;
             z-index: 10001;
+            pointer-events: auto;
           }
           .scanner-btn {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
-            border: 2px solid white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 14px 26px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+            pointer-events: auto;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .scanner-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.95);
           }
           .scanner-focus {
             position: absolute;
@@ -514,8 +530,8 @@ Profit: ${formatPrice(receipt.profit)}
           }
         </style>
         <div class="scanner-controls">
-          <button id="scanner-back" class="scanner-btn">← Kembali</button>
-          <button id="scanner-flash" class="scanner-btn">💡 Flash</button>
+          <button id="scanner-back-btn" class="scanner-btn">← Kembali</button>
+          <button id="scanner-flash-btn" class="scanner-btn">💡 Flash</button>
         </div>
         <div class="scanner-focus scanner-focus-bottom"></div>
         <div class="scanner-text">Arahkan kamera ke barcode</div>
@@ -524,22 +540,23 @@ Profit: ${formatPrice(receipt.profit)}
       
       // Handle back button
       let scanCancelled = false;
-      document.getElementById('scanner-back')?.addEventListener('click', async () => {
+      document.getElementById('scanner-back-btn')?.addEventListener('click', async () => {
         scanCancelled = true;
         await BarcodeScanner.stopScan();
         document.body.classList.remove('scanner-active');
+        await BarcodeScanner.showBackground();
         document.getElementById('scanner-overlay')?.remove();
         setIsScanning(false);
       });
       
       // Handle flash toggle
       let flashOn = false;
-      document.getElementById('scanner-flash')?.addEventListener('click', async () => {
+      document.getElementById('scanner-flash-btn')?.addEventListener('click', async () => {
         flashOn = !flashOn;
-        const btn = document.getElementById('scanner-flash');
+        const btn = document.getElementById('scanner-flash-btn');
         if (btn) {
           btn.textContent = flashOn ? '💡 Flash ON' : '💡 Flash';
-          btn.style.background = flashOn ? 'rgba(59, 130, 246, 0.8)' : 'rgba(0, 0, 0, 0.6)';
+          btn.style.background = flashOn ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0, 0, 0, 0.85)';
         }
       });
       
@@ -548,6 +565,7 @@ Profit: ${formatPrice(receipt.profit)}
       
       // Remove overlay and transparency
       document.body.classList.remove('scanner-active');
+      await BarcodeScanner.showBackground();
       document.getElementById('scanner-overlay')?.remove();
       setIsScanning(false);
 
@@ -573,6 +591,7 @@ Profit: ${formatPrice(receipt.profit)}
     } catch (error) {
       console.error('Barcode scan error:', error);
       document.body.classList.remove('scanner-active');
+      await BarcodeScanner.showBackground();
       document.getElementById('scanner-overlay')?.remove();
       setIsScanning(false);
       toast.error('Terjadi kesalahan saat scanning');
@@ -582,7 +601,7 @@ Profit: ${formatPrice(receipt.profit)}
   return (
     <div className="min-h-screen w-full bg-background">
       {/* Header - Fixed with safe area for status bar */}
-      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full pt-safe">
+      <header className="fixed top-safe z-50 border-b bg-card shadow-sm w-full">
         <div className="w-full px-2 sm:px-4 pb-1">
           <div className="flex items-center justify-between">
             <div 
@@ -688,7 +707,7 @@ Profit: ${formatPrice(receipt.profit)}
       </header>
 
         {/* Dashboard Stats with top padding for fixed header */}
-      <div className="w-full px-2 sm:px-4 py-2 sm:py-4 mt-[72px] sm:mt-24">
+      <div className="w-full px-2 sm:px-4 py-2 sm:py-4 mt-[60px] sm:mt-20">
         <div className="grid grid-cols-1 gap-2 sm:gap-4 mb-4 sm:mb-6">
           {/* Full width card on top */}
           <Card className="pos-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleDashboardClick('revenue')}>
