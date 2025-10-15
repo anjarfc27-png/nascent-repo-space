@@ -213,10 +213,11 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
             height: 100%;
             z-index: 9999;
             background: transparent;
+            pointer-events: none;
           }
           .scanner-controls {
             position: fixed;
-            top: 40px;
+            top: max(40px, env(safe-area-inset-top, 20px));
             left: 0;
             right: 0;
             display: flex;
@@ -224,21 +225,30 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
             align-items: center;
             padding: 0 20px;
             z-index: 99999;
-            pointer-events: none;
+            pointer-events: auto;
           }
           .scanner-btn {
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: white;
-            border: 2px solid white;
+            border: 2px solid rgba(255, 255, 255, 0.9);
             border-radius: 12px;
-            padding: 12px 24px;
+            padding: 14px 26px;
             font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
             pointer-events: auto;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+          .scanner-btn:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.95);
           }
           .scanner-focus {
             position: absolute;
@@ -334,7 +344,7 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
         const flashBtn = document.getElementById('scanner-flash-btn');
         if (flashBtn) {
           flashBtn.textContent = flashEnabled ? '💡 Flash ON' : '💡 Flash';
-          flashBtn.style.background = flashEnabled ? 'rgba(59, 130, 246, 0.8)' : 'rgba(0, 0, 0, 0.6)';
+          flashBtn.style.background = flashEnabled ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0, 0, 0, 0.85)';
         }
       });
 
