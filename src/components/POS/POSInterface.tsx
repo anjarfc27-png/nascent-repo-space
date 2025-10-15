@@ -581,11 +581,9 @@ Profit: ${formatPrice(receipt.profit)}
 
   return (
     <div className="min-h-screen w-full bg-background">
-      {/* Header - Fixed with safe area padding for status bar */}
-      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full">
-        {/* White spacer for status bar */}
-        <div className="h-12 bg-background"></div>
-        <div className="w-full px-2 sm:px-4 py-2 sm:py-3">
+      {/* Header - Fixed with safe area for status bar */}
+      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full pt-safe">
+        <div className="w-full px-2 sm:px-4 pb-1">
           <div className="flex items-center justify-between">
             <div 
               onClick={() => navigate('/settings', { replace: true })} 
@@ -689,8 +687,8 @@ Profit: ${formatPrice(receipt.profit)}
         </div>
       </header>
 
-        {/* Dashboard Stats with top padding for fixed header and status bar */}
-      <div className="w-full px-2 sm:px-4 py-2 sm:py-4 mt-28 sm:mt-32">
+        {/* Dashboard Stats with top padding for fixed header */}
+      <div className="w-full px-2 sm:px-4 py-2 sm:py-4 mt-[72px] sm:mt-24">
         <div className="grid grid-cols-1 gap-2 sm:gap-4 mb-4 sm:mb-6">
           {/* Full width card on top */}
           <Card className="pos-card cursor-pointer hover:shadow-lg transition-shadow" onClick={() => handleDashboardClick('revenue')}>

@@ -215,26 +215,30 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
             background: transparent;
           }
           .scanner-controls {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: 40px;
             left: 0;
             right: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            z-index: 10001;
+            z-index: 99999;
+            pointer-events: none;
           }
           .scanner-btn {
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.8);
             color: white;
             border: 2px solid white;
-            border-radius: 8px;
-            padding: 10px 20px;
-            font-size: 16px;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             backdrop-filter: blur(10px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            touch-action: manipulation;
           }
           .scanner-focus {
             position: absolute;
