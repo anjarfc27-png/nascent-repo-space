@@ -10,8 +10,11 @@ const config: CapacitorConfig = {
   },
   // Android status bar configuration  
   android: {
-    backgroundColor: '#00ACC1',
+    backgroundColor: '#3b82f6',
     allowMixedContent: true
+  },
+  server: {
+    androidScheme: 'https'
   },
   // Note: server.url dihapus agar APK memuat aset lokal (tidak membuka situs Lovable)
   // Untuk live-reload saat development, bisa sementara tambahkan kembali:

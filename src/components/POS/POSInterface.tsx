@@ -435,12 +435,22 @@ Profit: ${formatPrice(receipt.profit)}
         setIsScanning(false);
       });
       
-      // Handle flash toggle (note: flash control may not be available in all Capacitor versions)
+      // Handle flash toggle
       let flashOn = false;
-      document.getElementById('scanner-flash')?.addEventListener('click', () => {
+      document.getElementById('scanner-flash')?.addEventListener('click', async () => {
         flashOn = !flashOn;
-        // Flash toggle would require native implementation
-        toast.info(flashOn ? 'Flash ON' : 'Flash OFF');
+        try {
+          // Note: Flash control requires native implementation
+          // This is a placeholder - full implementation would require custom native code
+          const btn = document.getElementById('scanner-flash');
+          if (btn) {
+            btn.style.background = flashOn ? '#3b82f6' : 'white';
+            btn.style.color = flashOn ? 'white' : 'black';
+          }
+          toast.info(flashOn ? 'Flash ON (native only)' : 'Flash OFF');
+        } catch (error) {
+          console.error('Flash toggle error:', error);
+        }
       });
       
       // Start scanning

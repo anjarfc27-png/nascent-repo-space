@@ -17,11 +17,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 15%;
 
-    /* POS Primary - Cyan/Teal blue */
-    --primary: 186 94% 45%;
+    /* POS Primary - Blue (darker shade) */
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 98%;
-    --primary-light: 186 94% 55%;
-    --primary-glow: 186 94% 75%;
+    --primary-light: 217 91% 70%;
+    --primary-glow: 217 91% 85%;
 
     /* POS Success - Transaction success green */
     --success: 142 76% 36%;

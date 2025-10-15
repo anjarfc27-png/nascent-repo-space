@@ -7,7 +7,7 @@ interface AuthContextType {
   session: Session | null;
   signIn: (email: string, password: string) => Promise<{ error?: any }>;
   signInWithUsername: (username: string, password: string) => Promise<{ error?: any }>;
-  signUp: (email: string, username: string, password: string) => Promise<{ error?: any }>;
+  signUp: (email: string, username: string, password: string, whatsapp?: string) => Promise<{ error?: any }>;
   signOut: () => Promise<void>;
   verifyAdminPassword: (password: string) => Promise<boolean>;
   loading: boolean;
@@ -113,13 +113,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const signUp = async (email: string, username: string, password: string) => {
+  const signUp = async (email: string, username: string, password: string, whatsapp?: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
-          username: username
+          username: username,
+          whatsapp: whatsapp
         },
         emailRedirectTo: `${window.location.origin}/waiting-approval`
       }
