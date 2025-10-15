@@ -68,7 +68,7 @@ export const SubscriptionManagement = () => {
       setLoading(true);
       const { data, error } = await supabase
         .from('profiles')
-        .select('user_id, email, username, is_approved, subscription_expired_at, created_at')
+        .select('user_id, email, username, is_approved, created_at')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -86,32 +86,8 @@ export const SubscriptionManagement = () => {
 
     setExtending(true);
     try {
-      const months = parseInt(duration);
-      
-      // Calculate new date
-      const currentExpired = selectedUser.subscription_expired_at 
-        ? new Date(selectedUser.subscription_expired_at)
-        : new Date();
-      
-      // If expired, start from now
-      const startDate = currentExpired < new Date() ? new Date() : currentExpired;
-      
-      // Add months
-      const newExpiredDate = new Date(startDate);
-      newExpiredDate.setMonth(newExpiredDate.getMonth() + months);
-
-      // Update database
-      const { error } = await supabase
-        .from('profiles')
-        .update({ subscription_expired_at: newExpiredDate.toISOString() })
-        .eq('user_id', selectedUser.user_id);
-
-      if (error) throw error;
-
-      toast.success(`Subscription berhasil diperpanjang ${months} bulan sampai ${newExpiredDate.toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}`);
+      toast.error('Fitur subscription belum tersedia. Silakan jalankan migration SQL terlebih dahulu.');
       setShowExtendDialog(false);
-      setSelectedUser(null);
-      fetchUsers(); // Refresh data
     } catch (error) {
       console.error('Error extending subscription:', error);
       toast.error('Gagal memperpanjang subscription');
