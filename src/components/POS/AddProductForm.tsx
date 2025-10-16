@@ -9,7 +9,7 @@ import { Plus, X, Scan } from 'lucide-react';
 import { Product } from '@/types/pos';
 import { QuantitySelector } from './QuantitySelector';
 import { toast } from 'sonner';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { BarcodeScanner } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { useStore } from '@/contexts/StoreContext';
 
@@ -190,24 +190,12 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
         return;
       }
 
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      if (!status.granted) {
-        toast.error('Izin kamera diperlukan untuk scan barcode');
-        return;
-      }
-
       setIsScanning(true);
-      document.body.classList.add('scanner-active');
-      await BarcodeScanner.hideBackground();
-
-      const result = await BarcodeScanner.startScan();
-
-      document.body.classList.remove('scanner-active');
-      await BarcodeScanner.showBackground();
+      const result = await BarcodeScanner.scanBarcode({ hint: 'ALL', scanButton: true, scanText: 'Scan' });
       setIsScanning(false);
 
-      if (result.hasContent) {
-        const scannedCode = result.content;
+      if (result?.ScanResult) {
+        const scannedCode = result.ScanResult;
         const foundProduct = products.find(p => 
           p.barcode === scannedCode || p.code === scannedCode
         );
@@ -236,17 +224,12 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
       }
     } catch (error) {
       console.error('Barcode scan error:', error);
-      document.body.classList.remove('scanner-active');
-      await BarcodeScanner.showBackground();
       setIsScanning(false);
       toast.error('Gagal scan barcode');
     }
   };
 
   const stopScanning = async () => {
-    await BarcodeScanner.stopScan();
-    document.body.classList.remove('scanner-active');
-    await BarcodeScanner.showBackground();
     setIsScanning(false);
   };
 

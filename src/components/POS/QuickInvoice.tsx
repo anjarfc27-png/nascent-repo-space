@@ -7,7 +7,7 @@ import { Product } from '@/types/pos';
 import { useState, useRef, useEffect } from 'react';
 import { ShoppingCart } from './ShoppingCart';
 import { CartItem, Receipt } from '@/types/pos';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { BarcodeScanner } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 import {
@@ -122,44 +122,26 @@ export const QuickInvoice = ({
 
     try {
       setIsScanning(true);
-      
-      // Check permission
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      
-      if (!status.granted) {
-        toast.error('Izin kamera tidak diberikan');
-        setIsScanning(false);
-        return;
-      }
-
-      // Make background transparent
-      document.body.classList.add('scanner-active');
-      
-      // Start scanning
-      const result = await BarcodeScanner.startScan();
-      
-      // Remove transparency
-      document.body.classList.remove('scanner-active');
+      const result = await BarcodeScanner.scanBarcode({ hint: 'ALL' });
       setIsScanning(false);
 
-      if (result.hasContent) {
-        // Search for product by barcode or code
+      if (result?.ScanResult) {
+        const scanned = result.ScanResult;
         const foundProduct = products.find(p => 
-          p.barcode?.toLowerCase() === result.content?.toLowerCase() ||
-          p.code?.toLowerCase() === result.content?.toLowerCase() ||
-          p.name.toLowerCase().includes(result.content?.toLowerCase() || '')
+          p.barcode?.toLowerCase() === scanned.toLowerCase() ||
+          p.code?.toLowerCase() === scanned.toLowerCase() ||
+          p.name.toLowerCase().includes(scanned.toLowerCase())
         );
 
         if (foundProduct) {
           addToCart(foundProduct, 1);
           toast.success(`Produk "${foundProduct.name}" ditambahkan ke keranjang`);
         } else {
-          toast.error(`Produk dengan kode "${result.content}" tidak ditemukan`);
+          toast.error(`Produk dengan kode "${scanned}" tidak ditemukan`);
         }
       }
     } catch (error) {
       console.error('Barcode scan error:', error);
-      document.body.classList.remove('scanner-active');
       setIsScanning(false);
       toast.error('Terjadi kesalahan saat scanning');
     }

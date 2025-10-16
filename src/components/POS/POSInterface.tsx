@@ -41,7 +41,7 @@ import {
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '@/contexts/StoreContext';
-import { BarcodeScanner } from '@capacitor-community/barcode-scanner';
+import { BarcodeScanner } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
