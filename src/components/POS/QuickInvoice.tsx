@@ -7,7 +7,7 @@ import { Product } from '@/types/pos';
 import { useState, useRef, useEffect } from 'react';
 import { ShoppingCart } from './ShoppingCart';
 import { CartItem, Receipt } from '@/types/pos';
-import { BarcodeScanner } from '@capacitor/barcode-scanner';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 import {
@@ -122,7 +122,7 @@ export const QuickInvoice = ({
 
     try {
       setIsScanning(true);
-      const result = await BarcodeScanner.scanBarcode({ hint: 'ALL' });
+      const result = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL });
       setIsScanning(false);
 
       if (result?.ScanResult) {

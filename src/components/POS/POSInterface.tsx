@@ -41,7 +41,7 @@ import {
 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useStore } from '@/contexts/StoreContext';
-import { BarcodeScanner } from '@capacitor/barcode-scanner';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { toast } from 'sonner';
 
@@ -394,79 +394,15 @@ Profit: ${formatPrice(receipt.profit)}
 
     try {
       setIsScanning(true);
-      
-      // Check permission
-      const status = await BarcodeScanner.checkPermission({ force: true });
-      
-      if (!status.granted) {
-        toast.error('Izin kamera tidak diberikan');
-        setIsScanning(false);
-        return;
-      }
-
-      // Make background transparent and show scanner UI
-      document.body.classList.add('scanner-active');
-      
-      // Add scanner overlay with focus guide
-      const scannerOverlay = document.createElement('div');
-      scannerOverlay.id = 'scanner-overlay';
-      scannerOverlay.innerHTML = `
-        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 9999; background: transparent;">
-          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; border: 2px solid red; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);">
-            <div style="position: absolute; top: -2px; left: -2px; width: 30px; height: 30px; border-top: 4px solid red; border-left: 4px solid red;"></div>
-            <div style="position: absolute; top: -2px; right: -2px; width: 30px; height: 30px; border-top: 4px solid red; border-right: 4px solid red;"></div>
-            <div style="position: absolute; bottom: -2px; left: -2px; width: 30px; height: 30px; border-bottom: 4px solid red; border-left: 4px solid red;"></div>
-            <div style="position: absolute; bottom: -2px; right: -2px; width: 30px; height: 30px; border-bottom: 4px solid red; border-right: 4px solid red;"></div>
-          </div>
-          <button id="scanner-back" style="position: absolute; top: 20px; left: 20px; padding: 12px 24px; background: white; color: black; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer; z-index: 10000;">Kembali</button>
-          <button id="scanner-flash" style="position: absolute; top: 20px; right: 20px; padding: 12px 24px; background: white; color: black; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer; z-index: 10000;">Flash</button>
-          <p style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: white; font-size: 18px; text-align: center; z-index: 10000; text-shadow: 0 2px 4px rgba(0,0,0,0.8);">Arahkan kamera ke barcode</p>
-        </div>
-      `;
-      document.body.appendChild(scannerOverlay);
-      
-      // Handle back button
-      let scanCancelled = false;
-      document.getElementById('scanner-back')?.addEventListener('click', async () => {
-        scanCancelled = true;
-        await BarcodeScanner.stopScan();
-        document.body.classList.remove('scanner-active');
-        document.getElementById('scanner-overlay')?.remove();
-        setIsScanning(false);
-      });
-      
-      // Handle flash toggle
-      let flashOn = false;
-      document.getElementById('scanner-flash')?.addEventListener('click', async () => {
-        flashOn = !flashOn;
-        try {
-          // Note: Flash control requires native implementation
-          // This is a placeholder - full implementation would require custom native code
-          const btn = document.getElementById('scanner-flash');
-          if (btn) {
-            btn.style.background = flashOn ? '#3b82f6' : 'white';
-            btn.style.color = flashOn ? 'white' : 'black';
-          }
-          toast.info(flashOn ? 'Flash ON (native only)' : 'Flash OFF');
-        } catch (error) {
-          console.error('Flash toggle error:', error);
-        }
-      });
-      
-      // Start scanning
-      const result = await BarcodeScanner.startScan();
-      
-      // Remove overlay and transparency
-      document.body.classList.remove('scanner-active');
-      document.getElementById('scanner-overlay')?.remove();
+      const result = await scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL, scanButton: true, scanText: 'Scan' });
       setIsScanning(false);
 
-      if (!scanCancelled && result.hasContent) {
-        // Search for product by barcode or code
+      if (result?.ScanResult) {
+        const scanned = result.ScanResult;
         const foundProduct = products.find(p => 
-          p.barcode?.toLowerCase() === result.content?.toLowerCase() ||
-          p.code?.toLowerCase() === result.content?.toLowerCase() ||
-          p.name.toLowerCase().includes(result.content?.toLowerCase() || '')
+          p.barcode?.toLowerCase() === scanned.toLowerCase() ||
+          p.code?.toLowerCase() === scanned.toLowerCase() ||
+          p.name.toLowerCase().includes(scanned.toLowerCase())
         );
 
         if (foundProduct) {
@@ -477,13 +413,11 @@ Profit: ${formatPrice(receipt.profit)}
           }
           toast.success(`Produk "${foundProduct.name}" ditambahkan ke keranjang`);
         } else {
-          toast.error(`Produk dengan kode "${result.content}" tidak ditemukan`);
+          toast.error(`Produk dengan kode "${scanned}" tidak ditemukan`);
         }
       }
     } catch (error) {
       console.error('Barcode scan error:', error);
-      document.body.classList.remove('scanner-active');
-      document.getElementById('scanner-overlay')?.remove();
       setIsScanning(false);
       toast.error('Terjadi kesalahan saat scanning');
     }

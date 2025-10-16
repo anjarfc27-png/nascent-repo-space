@@ -9,7 +9,7 @@ import { Plus, X, Scan } from 'lucide-react';
 import { Product } from '@/types/pos';
 import { QuantitySelector } from './QuantitySelector';
 import { toast } from 'sonner';
-import { BarcodeScanner } from '@capacitor/barcode-scanner';
+import { CapacitorBarcodeScanner, CapacitorBarcodeScannerTypeHintALLOption } from '@capacitor/barcode-scanner';
 import { Capacitor } from '@capacitor/core';
 import { useStore } from '@/contexts/StoreContext';
 
@@ -191,7 +191,7 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
       }
 
       setIsScanning(true);
-      const result = await BarcodeScanner.scanBarcode({ hint: 'ALL', scanButton: true, scanText: 'Scan' });
+      const result = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL, scanButton: true, scanText: 'Scan' });
       setIsScanning(false);
 
       if (result?.ScanResult) {
