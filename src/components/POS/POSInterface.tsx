@@ -394,7 +394,7 @@ Profit: ${formatPrice(receipt.profit)}
 
     try {
       setIsScanning(true);
-      const result = await scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL, scanButton: true, scanText: 'Scan' });
+      const result = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL, scanButton: true, scanText: 'Scan' });
       setIsScanning(false);
 
       if (result?.ScanResult) {
