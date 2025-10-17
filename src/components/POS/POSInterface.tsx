@@ -394,7 +394,7 @@ Profit: ${formatPrice(receipt.profit)}
 
     try {
       setIsScanning(true);
-      const result = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL, scanButton: true, scanText: 'Scan' });
+      const result = await CapacitorBarcodeScanner.scanBarcode({ hint: CapacitorBarcodeScannerTypeHintALLOption.ALL });
       setIsScanning(false);
 
       if (result?.ScanResult) {
@@ -426,7 +426,7 @@ Profit: ${formatPrice(receipt.profit)}
   return (
     <div className="min-h-screen w-full bg-background">
       {/* Header - Fixed with safe area */}
-      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full pt-safe">
+      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full safe-top">
         <div className="w-full px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between">
             <div 

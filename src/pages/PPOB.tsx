@@ -54,7 +54,7 @@ export const PPOB = () => {
   return (
     <div className="min-h-screen bg-gray-50 safe-top safe-bottom">
       {/* Header iOS Style */}
-      <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10 safe-top border-b border-gray-100">
+      <div className="bg-white px-4 py-3 shadow-sm sticky top-0 z-10 border-b border-gray-100 safe-top">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-3">
             <Button 
