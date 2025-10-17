@@ -437,8 +437,8 @@ Profit: ${formatPrice(receipt.profit)}
 
   return (
     <div className="min-h-screen w-full bg-background">
-      {/* Header */}
-      <header className="border-b bg-card shadow-sm w-full sticky top-0 z-40">
+      {/* Header - Fixed with safe area */}
+      <header className="fixed top-0 z-50 border-b bg-card shadow-sm w-full safe-top"
         <div className="w-full px-2 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             <div 
@@ -544,7 +544,7 @@ Profit: ${formatPrice(receipt.profit)}
       </header>
 
       {/* Main Content Layout - Desktop: 2 columns, Mobile: 1 column */}
-      <div className="w-full flex flex-col lg:flex-row">
+      <div className="w-full flex flex-col lg:flex-row pt-16 safe-top">
         {/* Left Column: Dashboard Stats & Content */}
         <div className="flex-1 px-2 sm:px-6 lg:px-8 py-2 sm:py-4">
         <div className="grid grid-cols-1 gap-2 sm:gap-4 mb-4 sm:mb-6">

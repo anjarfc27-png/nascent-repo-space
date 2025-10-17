@@ -202,6 +202,7 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
             isPhotocopy: foundProduct.isPhotocopy || false,
           });
           toast.success(`Produk ditemukan: ${foundProduct.name}. Masukkan jumlah stok.`);
+          // Stay in admin form, don't redirect
         } else {
           // New product - set barcode and let user fill details
           setFormData(prev => ({
@@ -209,6 +210,7 @@ export default function AddProductForm({ onAddProduct, onUpdateProduct, products
             barcode: scannedCode,
           }));
           toast.success(`Barcode discan: ${scannedCode}. Lengkapi data produk.`);
+          // Stay in admin form, don't redirect
         }
       }
     } catch (error) {

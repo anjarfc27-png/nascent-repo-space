@@ -54,7 +54,7 @@ export const PPOB = () => {
   return (
     <div className="min-h-screen bg-gray-50 safe-bottom">
       {/* Header iOS Style */}
-      <div className="bg-white px-4 py-2 shadow-sm fixed top-0 z-10 border-b border-gray-100 w-full safe-top">
+      <div className="bg-white px-4 py-3 shadow-sm fixed top-0 z-10 border-b border-gray-100 w-full safe-top">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-3">
             <Button 
@@ -80,7 +80,7 @@ export const PPOB = () => {
 
       {/* Tabs iOS Style */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="bg-white border-b border-gray-100 sticky top-[56px] z-10">
+        <div className="bg-white border-b border-gray-100 sticky top-[64px] z-10">
           <TabsList className="w-full h-12 bg-transparent rounded-none border-0 grid grid-cols-2">
             <TabsTrigger 
               value="beranda" 
