@@ -17,7 +17,7 @@ import { supabase } from '@/integrations/supabase/client';
 import kasirqLogo from '@/assets/kasirq-logo.png';
 
 export const LoginPage = () => {
-  const { signIn, signInWithUsername, signUp, loading, user } = useAuth();
+  const { signIn, signInWithUsername, signUp, loading, user, isAdminCheckComplete } = useAuth();
   const { currentStore } = useStore();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -38,6 +38,7 @@ export const LoginPage = () => {
   
   const [errors, setErrors] = useState<string>('');
   const [showStoreSelector, setShowStoreSelector] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -175,8 +176,20 @@ export const LoginPage = () => {
     navigate('/');
   };
 
+  // Show loading while checking admin status
+  if (user && !isAdminCheckComplete) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Memuat data akun...</p>
+        </div>
+      </div>
+    );
+  }
+
   // Show store selector if user is logged in but no store selected yet
-  if (user && !currentStore) {
+  if (user && isAdminCheckComplete && !currentStore) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background p-4">
         <div className="w-full max-w-4xl">
@@ -229,14 +242,29 @@ export const LoginPage = () => {
                 </div>
                 <div>
                   <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={loginData.password}
-                    onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
-                    required
-                    className="h-12 rounded-xl border-2 focus:border-primary transition-all mt-2"
-                  />
+                  <div className="relative mt-2">
+                    <Input
+                      id="password"
+                      type={showLoginPassword ? "text" : "password"}
+                      value={loginData.password}
+                      onChange={(e) => setLoginData(prev => ({ ...prev, password: e.target.value }))}
+                      required
+                      className="h-12 rounded-xl border-2 focus:border-primary transition-all pr-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                      onClick={() => setShowLoginPassword(!showLoginPassword)}
+                    >
+                      {showLoginPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
                 
                 {errors && (
