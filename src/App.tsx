@@ -21,6 +21,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PPOB } from "@/pages/PPOB";
 import { SubscriptionManagement } from "@/pages/admin/SubscriptionManagement";
 import { PPOBNavButton } from "@/components/Navigation/PPOBNavButton";
+import { AdminPanel } from "@/pages/AdminPanel";
 
 // Create QueryClient outside component to prevent recreation on every render
 const queryClient = new QueryClient({
@@ -72,6 +73,11 @@ const App = () => {
                       <ProtectedRoute>
                         <StoreSettings />
                       </ProtectedRoute>
+                    } />
+                    <Route path="/admin" element={
+                      <AdminRoute>
+                        <AdminPanel />
+                      </AdminRoute>
                     } />
                     <Route path="/admin/users" element={
                       <AdminRoute>

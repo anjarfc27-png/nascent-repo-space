@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { CheckCircle, XCircle, Ban, MessageCircle, Instagram, ArrowLeft, LogOut, Calendar } from 'lucide-react';
+import { CheckCircle, XCircle, Ban, MessageCircle, Instagram, ArrowLeft, LogOut, Calendar, Users } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   AlertDialog,
@@ -234,213 +234,257 @@ export const UserManagement = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      {/* Header with navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-3xl font-bold">Manajemen User</h1>
-        <div className="flex flex-col sm:flex-row gap-2">
-          <Button 
-            variant="default"
-            onClick={() => navigate('/admin/subscriptions')}
-            className="w-full sm:w-auto"
-          >
-            <Calendar className="h-4 w-4 mr-2" />
-            Kelola Subscription
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/pos')}
-            className="w-full sm:w-auto"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Ke POS
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={async () => {
-              await signOut();
-              navigate('/login');
-            }}
-            className="w-full sm:w-auto"
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Keluar
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      {/* iOS Style Header */}
+      <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200 sticky top-0 z-10">
+        <div className="safe-top py-4 px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => navigate('/')}
+                className="rounded-full hover:bg-gray-100"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Manajemen User</h1>
+                <p className="text-sm text-gray-600">Kelola persetujuan dan user aktif</p>
+              </div>
+            </div>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={async () => {
+                await signOut();
+                navigate('/login');
+              }}
+              className="rounded-full hover:bg-gray-100"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Admin Contact Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Kontak Admin</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="admin-whatsapp">Nomor WhatsApp (format: 6281234567890)</Label>
-            <div className="flex gap-2">
-              <Input
-                id="admin-whatsapp"
-                value={adminWhatsApp}
-                onChange={(e) => setAdminWhatsApp(e.target.value)}
-                placeholder="628xx xxxx xxxx"
-              />
-              <Button onClick={saveAdminContactInfo} disabled={savingContacts}>
-                <MessageCircle className="h-4 w-4 mr-2" />
-                Simpan
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Nomor ini akan muncul di halaman login untuk dihubungi calon user
-            </p>
-          </div>
-          
-          <div>
-            <Label htmlFor="admin-instagram">Username Instagram (tanpa @)</Label>
-            <div className="flex gap-2">
-              <Input
-                id="admin-instagram"
-                value={adminInstagram}
-                onChange={(e) => setAdminInstagram(e.target.value)}
-                placeholder="username"
-              />
-              <Button onClick={saveAdminContactInfo} disabled={savingContacts} variant="outline">
-                <Instagram className="h-4 w-4 mr-2" />
-                Simpan
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Username ini akan muncul di halaman login untuk dihubungi calon user
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6 pb-safe-bottom">
 
-      {/* Pending Approvals */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            Menunggu Persetujuan
-            {pendingUsers.length > 0 && (
-              <span className="bg-destructive text-destructive-foreground text-sm px-2 py-1 rounded-full">
-                {pendingUsers.length}
-              </span>
-            )}
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {pendingUsers.length === 0 ? (
-            <p className="text-muted-foreground">Tidak ada user yang menunggu persetujuan</p>
-          ) : (
-            <div className="space-y-4">
-              {pendingUsers.map((user) => (
-                <div
-                  key={user.user_id}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-lg"
+        {/* Quick Action Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <Button 
+            variant="outline"
+            onClick={() => navigate('/admin/subscriptions')}
+            className="h-14 rounded-2xl border-gray-200 hover:bg-gray-50 justify-start"
+          >
+            <Calendar className="h-5 w-5 mr-3" />
+            <span className="font-semibold">Kelola Subscription</span>
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={() => navigate('/')}
+            className="h-14 rounded-2xl border-gray-200 hover:bg-gray-50 justify-start"
+          >
+            <ArrowLeft className="h-5 w-5 mr-3" />
+            <span className="font-semibold">Dashboard</span>
+          </Button>
+        </div>
+
+        {/* Admin Contact Settings */}
+        <Card className="border-0 shadow-sm rounded-2xl bg-white">
+          <CardHeader>
+            <CardTitle className="text-lg">Kontak Admin</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="admin-whatsapp" className="text-sm font-medium">Nomor WhatsApp (format: 6281234567890)</Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  id="admin-whatsapp"
+                  value={adminWhatsApp}
+                  onChange={(e) => setAdminWhatsApp(e.target.value)}
+                  placeholder="628xx xxxx xxxx"
+                  className="rounded-xl"
+                />
+                <Button 
+                  onClick={saveAdminContactInfo} 
+                  disabled={savingContacts}
+                  className="rounded-xl"
                 >
-                  <div className="flex-1">
-                    <p className="font-semibold">{user.username}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Daftar: {new Date(user.created_at).toLocaleString('id-ID')}
-                    </p>
-                  </div>
-                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                    <Button
-                      size="sm"
-                      variant="default"
-                      onClick={() => setActionUser({ id: user.user_id, action: 'approve' })}
-                      className="w-full sm:w-auto"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Setujui
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => setActionUser({ id: user.user_id, action: 'reject' })}
-                      className="w-full sm:w-auto"
-                    >
-                      <XCircle className="h-4 w-4 mr-1" />
-                      Tolak
-                    </Button>
-                  </div>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  Simpan
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Nomor ini akan muncul di halaman login untuk dihubungi calon user
+              </p>
+            </div>
+            
+            <div>
+              <Label htmlFor="admin-instagram" className="text-sm font-medium">Username Instagram (tanpa @)</Label>
+              <div className="flex gap-2 mt-2">
+                <Input
+                  id="admin-instagram"
+                  value={adminInstagram}
+                  onChange={(e) => setAdminInstagram(e.target.value)}
+                  placeholder="username"
+                  className="rounded-xl"
+                />
+                <Button 
+                  onClick={saveAdminContactInfo} 
+                  disabled={savingContacts} 
+                  variant="outline"
+                  className="rounded-xl"
+                >
+                  <Instagram className="h-4 w-4 mr-2" />
+                  Simpan
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Username ini akan muncul di halaman login untuk dihubungi calon user
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Pending Approvals */}
+        <Card className="border-0 shadow-sm rounded-2xl bg-white">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              Menunggu Persetujuan
+              {pendingUsers.length > 0 && (
+                <span className="bg-red-500 text-white text-xs px-2.5 py-1 rounded-full font-semibold">
+                  {pendingUsers.length}
+                </span>
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {pendingUsers.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-gray-100 mx-auto mb-4 flex items-center justify-center">
+                  <CheckCircle className="h-8 w-8 text-gray-400" />
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Approved Users */}
-      <Card>
-        <CardHeader>
-          <CardTitle>User Aktif ({approvedUsers.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {approvedUsers.length === 0 ? (
-            <p className="text-muted-foreground">Belum ada user yang disetujui</p>
-          ) : (
-            <div className="space-y-4">
-              {approvedUsers.map((user) => (
-                <div
-                  key={user.user_id}
-                  className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border rounded-lg"
-                >
-                  <div className="flex-1">
-                    <p className="font-semibold">{user.username}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
-                    <p className="text-xs text-muted-foreground">
-                      Disetujui: {user.approved_at ? new Date(user.approved_at).toLocaleString('id-ID') : '-'}
-                    </p>
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => setActionUser({ id: user.user_id, action: 'suspend' })}
-                    className="w-full sm:w-auto"
+                <p className="text-muted-foreground font-medium">Tidak ada user yang menunggu persetujuan</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {pendingUsers.map((user) => (
+                  <div
+                    key={user.user_id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/50 hover:bg-gray-50 transition-colors"
                   >
-                    <Ban className="h-4 w-4 mr-1" />
-                    Suspend
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{user.username}</p>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Daftar: {new Date(user.created_at).toLocaleString('id-ID')}
+                      </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        onClick={() => setActionUser({ id: user.user_id, action: 'approve' })}
+                        className="w-full sm:w-auto rounded-xl"
+                      >
+                        <CheckCircle className="h-4 w-4 mr-1" />
+                        Setujui
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => setActionUser({ id: user.user_id, action: 'reject' })}
+                        className="w-full sm:w-auto rounded-xl"
+                      >
+                        <XCircle className="h-4 w-4 mr-1" />
+                        Tolak
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-      {/* Confirmation Dialog */}
-      <AlertDialog open={!!actionUser} onOpenChange={() => setActionUser(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              {actionUser?.action === 'approve' && 'Setujui User?'}
-              {actionUser?.action === 'reject' && 'Tolak & Hapus User?'}
-              {actionUser?.action === 'suspend' && 'Suspend User?'}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {actionUser?.action === 'approve' &&
-                'User akan dapat login dan menggunakan aplikasi.'}
-              {actionUser?.action === 'reject' &&
-                'User akan dihapus dari database dan tidak dapat login. Jika ingin mendaftar lagi, mereka harus menghubungi admin.'}
-              {actionUser?.action === 'suspend' &&
-                'User tidak akan dapat login sampai disetujui kembali.'}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => {
-                if (actionUser?.action === 'approve') handleApprove(actionUser.id);
-                if (actionUser?.action === 'reject') handleReject(actionUser.id);
-                if (actionUser?.action === 'suspend') handleSuspend(actionUser.id);
-              }}
-            >
-              Ya, Lanjutkan
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+        {/* Approved Users */}
+        <Card className="border-0 shadow-sm rounded-2xl bg-white">
+          <CardHeader>
+            <CardTitle className="text-lg">User Aktif ({approvedUsers.length})</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {approvedUsers.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 rounded-full bg-gray-100 mx-auto mb-4 flex items-center justify-center">
+                  <Users className="h-8 w-8 text-gray-400" />
+                </div>
+                <p className="text-muted-foreground font-medium">Belum ada user yang disetujui</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {approvedUsers.map((user) => (
+                  <div
+                    key={user.user_id}
+                    className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 border border-gray-200 rounded-2xl bg-gray-50/50 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="flex-1">
+                      <p className="font-semibold text-gray-900">{user.username}</p>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Disetujui: {user.approved_at ? new Date(user.approved_at).toLocaleString('id-ID') : '-'}
+                      </p>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setActionUser({ id: user.user_id, action: 'suspend' })}
+                      className="w-full sm:w-auto rounded-xl"
+                    >
+                      <Ban className="h-4 w-4 mr-1" />
+                      Suspend
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Confirmation Dialog */}
+        <AlertDialog open={!!actionUser} onOpenChange={() => setActionUser(null)}>
+          <AlertDialogContent className="rounded-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                {actionUser?.action === 'approve' && 'Setujui User?'}
+                {actionUser?.action === 'reject' && 'Tolak & Hapus User?'}
+                {actionUser?.action === 'suspend' && 'Suspend User?'}
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                {actionUser?.action === 'approve' &&
+                  'User akan dapat login dan menggunakan aplikasi.'}
+                {actionUser?.action === 'reject' &&
+                  'User akan dihapus dari database dan tidak dapat login. Jika ingin mendaftar lagi, mereka harus menghubungi admin.'}
+                {actionUser?.action === 'suspend' &&
+                  'User tidak akan dapat login sampai disetujui kembali.'}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="rounded-xl">Batal</AlertDialogCancel>
+              <AlertDialogAction
+                className="rounded-xl"
+                onClick={() => {
+                  if (actionUser?.action === 'approve') handleApprove(actionUser.id);
+                  if (actionUser?.action === 'reject') handleReject(actionUser.id);
+                  if (actionUser?.action === 'suspend') handleSuspend(actionUser.id);
+                }}
+              >
+                Ya, Lanjutkan
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </div>
   );
 };
