@@ -52,9 +52,10 @@ export const PPOB = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 safe-bottom">
+    <div className="min-h-screen bg-gray-50">
       {/* Header iOS Style */}
-      <div className="bg-white px-4 py-3 shadow-sm fixed top-0 z-10 border-b border-gray-100 w-full safe-top">
+      <div className="bg-white px-4 shadow-sm fixed top-0 z-10 border-b border-gray-100 w-full">
+        <div className="py-3 safe-top">
         <div className="flex items-center justify-between max-w-6xl mx-auto">
           <div className="flex items-center gap-3">
             <Button 
@@ -76,11 +77,12 @@ export const PPOB = () => {
             Atur Harga
           </Button>
         </div>
+        </div>
       </div>
 
       {/* Tabs iOS Style */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <div className="bg-white border-b border-gray-100 sticky top-[64px] z-10">
+        <div className="bg-white border-b border-gray-100 sticky top-[68px] z-10">
           <TabsList className="w-full h-12 bg-transparent rounded-none border-0 grid grid-cols-2">
             <TabsTrigger 
               value="beranda" 
@@ -97,7 +99,7 @@ export const PPOB = () => {
           </TabsList>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 py-4 space-y-4 pb-24">
+        <div className="max-w-6xl mx-auto px-4 py-4 space-y-4 pb-24 pt-32">
           <TabsContent value="beranda" className="space-y-4 mt-0">
             {/* Deposit Card iOS Style */}
             <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-cyan-50 overflow-hidden rounded-2xl">
@@ -204,7 +206,8 @@ export const PPOB = () => {
       </Tabs>
 
       {/* Bottom Button iOS Style */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-xl border-t border-gray-100 safe-bottom">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-xl border-t border-gray-100">
+        <div className="safe-bottom">
         <div className="max-w-6xl mx-auto">
           <Button 
             className="w-full h-14 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg text-white font-bold text-lg rounded-2xl transition-all active:scale-95"
@@ -213,6 +216,7 @@ export const PPOB = () => {
             <span className="mr-2">0 Item</span>
             LANJUTKAN
           </Button>
+        </div>
         </div>
       </div>
     </div>

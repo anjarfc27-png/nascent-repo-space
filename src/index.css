@@ -4,6 +4,23 @@
 
 /* POS System Design System - Professional cashier interface colors and styles */
 
+/* Safe Area Support for Notch/Status Bar */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right);
+}
+
 @layer base {
   :root {
     /* POS Background colors */
